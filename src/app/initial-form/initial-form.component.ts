@@ -30,12 +30,11 @@ import * as citiesJSON from '../../assets/data/cities.json';
 })
 
 export class InitialFormComponent implements OnInit, OnDestroy {
-  // formChanges: Subscription;
 
   intialForm: FormGroup = new FormGroup({
-    tripTypeControl: new FormControl([], Validators.required),
+    tripTypeControl: new FormControl<string>('', Validators.required),
     departureLocation: new FormControl<string>('', Validators.required),
-    destinationLocation: new FormControl([], Validators.required),
+    destinationLocation: new FormControl<string>('', Validators.required),
     departureDate: new FormControl<Date | null>(null),
     dateRange: new FormGroup({
       start: new FormControl<Date | null>(null),
@@ -54,8 +53,6 @@ export class InitialFormComponent implements OnInit, OnDestroy {
   filteredDestinationCities: Observable<string[]> | undefined;
 
   constructor() {
-    // this.formChanges = this.intialForm.valueChanges.pipe()
-    //   .subscribe(formVal => console.log(formVal));
   }
 
   private _filter(value: string): string[] {
@@ -79,6 +76,5 @@ export class InitialFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // this.formChanges.unsubscribe();
   }
 }

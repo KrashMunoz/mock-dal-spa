@@ -15,9 +15,20 @@
     <mat-form-field>
         <mat-label>Select a departure city</mat-label>
         <input #input type="text" placeholder="Pick one" matInput formControlName="departureLocation"
-            [matAutocomplete]="auto" (input)="filter()" (focus)="filter()">
-        <mat-autocomplete requireSelection #auto="matAutocomplete">
-            @for (option of filteredCityOptions; track option) {
+            [matAutocomplete]="departAuto">
+        <mat-autocomplete #departAuto="matAutocomplete">
+            @for (option of filteredDepartureCities | async; track option) {
+            <mat-option [value]="option">{{option}}</mat-option>
+            }
+        </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Select a destination city</mat-label>
+        <input #input type="text" placeholder="Pick one" matInput formControlName="destinationLocation"
+            [matAutocomplete]="destAuto">
+        <mat-autocomplete #destAuto="matAutocomplete">
+            @for (option of filteredDestinationCities | async; track option) {
             <mat-option [value]="option">{{option}}</mat-option>
             }
         </mat-autocomplete>

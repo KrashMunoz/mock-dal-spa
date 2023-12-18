@@ -1,4 +1,16 @@
-.active {
-  background-color: grey;
-  color: white;
+.toolbar-wrapper {
+  display: flex;
+  flex-flow: row nowrap;
+  margin: 0 1em;
+  width: 100%;
+
+  .right {
+    margin-left: auto;
+
+  }
+
+  .active {
+    background-color: #e01933;
+    color: white;
+  }
 }

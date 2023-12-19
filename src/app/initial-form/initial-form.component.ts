@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { Observable, Subscription, debounceTime, distinctUntilChanged, first, map, startWith, tap } from 'rxjs';
+import { Observable, Subscription, debounceTime, distinctUntilChanged, first, map, range, startWith, tap } from 'rxjs';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import * as citiesJSON from '../../assets/data/cities.json';
@@ -32,18 +32,21 @@ import { MatButtonModule } from '@angular/material/button';
 })
 
 export class InitialFormComponent implements OnInit, OnDestroy {
+  subscriptions: Array<Subscription | undefined> = [];
+
+  minDate: Date = new Date(Date.now())
 
   initialForm: FormGroup = new FormGroup({
     tripTypeControl: new FormControl<string>('', Validators.required),
     departureLocation: new FormControl<string>('', Validators.required),
     destinationLocation: new FormControl<string>('', Validators.required),
-    departureDate: new FormControl<Date | null>(null, Validators.required),
+    departureDate: new FormControl<Date | null>(null),
     dateRange: new FormGroup({
-      start: new FormControl<Date | null>(null, Validators.required),
-      end: new FormControl<Date | null>(null, Validators.required)
+      start: new FormControl<Date | null>(null),
+      end: new FormControl<Date | null>(null)
     }),
-    passengerControl: new FormControl([], [Validators.required, Validators.min(1), Validators.max(9)]),
-    flightClass: new FormControl()
+    passengerControl: new FormControl<number | null>(null, [Validators.required, Validators.min(1), Validators.max(9)]),
+    flightClass: new FormControl<string | null>(null, Validators.required)
   })
 
   tripOptions = [
@@ -52,9 +55,9 @@ export class InitialFormComponent implements OnInit, OnDestroy {
   ];
 
   flightClassOptions = [
-    { description: 'Economy', value: 'economy' },
-    { description: 'Business', value: 'business' },
-    { description: 'First class', value: 'first-class' }
+    { description: 'Economy', value: 'economy', preferred: false },
+    { description: 'Business', value: 'business', preferred: false },
+    { description: 'First class', value: 'first-class', preferred: true }
   ];
 
   cityOptions: string[] = citiesJSON.cities;
@@ -82,8 +85,41 @@ export class InitialFormComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map(value => this._filter(value))
     )
+
+    // Conditional Validation
+    const flightTypeSub = this.initialForm.get('tripTypeControl')?.valueChanges.subscribe(changes => {
+      const deepartureDate = this.initialForm.get('departureDate');
+      const rangeStart = this.initialForm.get('dateRange.start');
+      const rangeEnd = this.initialForm.get('dateRange.end');
+
+      if (changes === 'one-way') {
+        // set one-way validator
+        deepartureDate?.setValidators([Validators.required]);
+        // clear round-trip validators
+        rangeStart?.setValidators([]);
+        rangeEnd?.setValidators([]);
+      } else {
+        // set round-trip validators
+        rangeStart?.setValidators([Validators.required]);
+        rangeEnd?.setValidators([Validators.required]);
+        // clear one-way validators
+        deepartureDate?.setValidators([]);
+      }
+      deepartureDate?.updateValueAndValidity();
+      rangeStart?.updateValueAndValidity();
+      rangeEnd?.updateValueAndValidity();
+
+      // console.table({
+      //   oneWay: deepartureDate?.errors,
+      //   roundTripStart: rangeStart?.errors,
+      //   roundTripEnd: rangeEnd?.errors
+      // });
+    });
+
+    this.subscriptions.push(flightTypeSub);
   }
 
   ngOnDestroy(): void {
+    this.subscriptions.forEach(sub => sub?.unsubscribe());
   }
 }

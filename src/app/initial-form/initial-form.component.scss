@@ -1,4 +1,17 @@
-#form-wrapper {
+#form-wrapper>form {
   display: flex;
-  margin: 2em;
+  flex-flow: column;
+  margin: 2em auto;
+  max-width: 500px;
+  padding: 1em;
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    mat-form-field {
+      flex-basis: 48%;
+    }
+  }
 }

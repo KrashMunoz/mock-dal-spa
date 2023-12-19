@@ -1,6 +1,6 @@
 <div id="form-wrapper">
     <!-- Initial Form -->
-    <form [formGroup]="intialForm">
+    <form [formGroup]="initialForm">
         <mat-form-field>
             <mat-label>Trip type</mat-label>
             <mat-select formControlName="tripTypeControl">
@@ -13,31 +13,33 @@
         </mat-form-field>
 
         <!-- Flight Location(s) -->
-        <mat-form-field>
-            <mat-label>Select a departure city</mat-label>
-            <input #input type="text" placeholder="Pick one" matInput formControlName="departureLocation"
-                [matAutocomplete]="departAuto">
-            <mat-autocomplete #departAuto="matAutocomplete">
-                @for (option of filteredDepartureCities | async; track option) {
-                <mat-option [value]="option">{{option}}</mat-option>
-                }
-            </mat-autocomplete>
-        </mat-form-field>
+        <div class="form-row">
+            <mat-form-field>
+                <mat-label>Select a departure city</mat-label>
+                <input #input type="text" placeholder="Pick one" matInput formControlName="departureLocation"
+                    [matAutocomplete]="departAuto">
+                <mat-autocomplete #departAuto="matAutocomplete">
+                    @for (option of filteredDepartureCities | async; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
 
-        <mat-form-field>
-            <mat-label>Select a destination city</mat-label>
-            <input #input type="text" placeholder="Pick one" matInput formControlName="destinationLocation"
-                [matAutocomplete]="destAuto">
-            <mat-autocomplete #destAuto="matAutocomplete">
-                @for (option of filteredDestinationCities | async; track option) {
-                <mat-option [value]="option">{{option}}</mat-option>
-                }
-            </mat-autocomplete>
-        </mat-form-field>
+            <mat-form-field>
+                <mat-label>Select a destination city</mat-label>
+                <input #input type="text" placeholder="Pick one" matInput formControlName="destinationLocation"
+                    [matAutocomplete]="destAuto">
+                <mat-autocomplete #destAuto="matAutocomplete">
+                    @for (option of filteredDestinationCities | async; track option) {
+                    <mat-option [value]="option">{{option}}</mat-option>
+                    }
+                </mat-autocomplete>
+            </mat-form-field>
+        </div>
 
         <!-- Flight Date(s) -->
-        <!-- KM TODO: Implment conditional logic to switch between date picker and date range depending on the value of tripTypeControl -->
         <!-- ONE WAY -->
+        @if (initialForm.get('tripTypeControl')?.value === 'one-way') {
         <mat-form-field>
             <mat-label>Choose a date</mat-label>
             <input matInput [matDatepicker]="singlePicker" formControlName="departureDate">
@@ -45,7 +47,10 @@
             <mat-datepicker-toggle matIconSuffix [for]="singlePicker"></mat-datepicker-toggle>
             <mat-datepicker #singlePicker></mat-datepicker>
         </mat-form-field>
+        }
+
         <!-- ROUND TRIP -->
+        @if (initialForm.get('tripTypeControl')?.value === 'round-trip') {
         <mat-form-field>
             <mat-label>Enter a date range</mat-label>
             <mat-date-range-input formGroupName="dateRange" [rangePicker]="rangePicker">
@@ -57,18 +62,30 @@
             <mat-date-range-picker #rangePicker></mat-date-range-picker>
 
             <!-- KM TODO: Implement validation messages -->
-            <!-- @if (initialForm.dateRange.controls.start.hasError('matStartDateInvalid')) {
-            <mat-error>Invalid start date</mat-error>
+            @if (initialForm.get('dateRange.start')?.valid === false) {
+            <mat-error>Start date required</mat-error>
             }
-            @if (dateRange.controls.end.hasError('matEndDateInvalid')) {
-            <mat-error>Invalid end date</mat-error>
-            } -->
+            @if (initialForm.get('dateRange.end')?.valid === false) {
+            <mat-error>End date required</mat-error>
+            }
         </mat-form-field>
+        }
 
         <!-- Number of Passengers -->
         <mat-form-field>
             <mat-label>Number of passengers</mat-label>
             <input matInput type="number" formControlName="passengerControl">
         </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Select class</mat-label>
+            <mat-select>
+                @for (option of flightClassOptions; track option) {
+                <mat-option [value]="option.value">{{option.description}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" [disabled]="!initialForm.valid">Find flights</button>
     </form>
 </div>

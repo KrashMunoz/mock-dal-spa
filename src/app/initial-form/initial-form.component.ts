@@ -10,6 +10,7 @@ import { Observable, Subscription, debounceTime, distinctUntilChanged, first, ma
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import * as citiesJSON from '../../assets/data/cities.json';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-initial-form',
   standalone: true,
@@ -23,6 +24,7 @@ import * as citiesJSON from '../../assets/data/cities.json';
     MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatButtonModule,
     AsyncPipe
   ],
   templateUrl: './initial-form.component.html',
@@ -31,21 +33,28 @@ import * as citiesJSON from '../../assets/data/cities.json';
 
 export class InitialFormComponent implements OnInit, OnDestroy {
 
-  intialForm: FormGroup = new FormGroup({
+  initialForm: FormGroup = new FormGroup({
     tripTypeControl: new FormControl<string>('', Validators.required),
     departureLocation: new FormControl<string>('', Validators.required),
     destinationLocation: new FormControl<string>('', Validators.required),
-    departureDate: new FormControl<Date | null>(null),
+    departureDate: new FormControl<Date | null>(null, Validators.required),
     dateRange: new FormGroup({
-      start: new FormControl<Date | null>(null),
-      end: new FormControl<Date | null>(null)
+      start: new FormControl<Date | null>(null, Validators.required),
+      end: new FormControl<Date | null>(null, Validators.required)
     }),
-    passengerControl: new FormControl([], [Validators.required, Validators.min(1), Validators.max(9)])
+    passengerControl: new FormControl([], [Validators.required, Validators.min(1), Validators.max(9)]),
+    flightClass: new FormControl()
   })
 
   tripOptions = [
     { description: 'One-way', value: 'one-way' },
     { description: 'Round-trip', value: 'round-trip' }
+  ];
+
+  flightClassOptions = [
+    { description: 'Economy', value: 'economy' },
+    { description: 'Business', value: 'business' },
+    { description: 'First class', value: 'first-class' }
   ];
 
   cityOptions: string[] = citiesJSON.cities;
@@ -61,13 +70,13 @@ export class InitialFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.filteredDepartureCities = this.intialForm.get('departureLocation')?.valueChanges.pipe(
+    this.filteredDepartureCities = this.initialForm.get('departureLocation')?.valueChanges.pipe(
       startWith(''),
       debounceTime(250),
       distinctUntilChanged(),
       map(value => this._filter(value))
     )
-    this.filteredDestinationCities = this.intialForm.get('destinationLocation')?.valueChanges.pipe(
+    this.filteredDestinationCities = this.initialForm.get('destinationLocation')?.valueChanges.pipe(
       startWith(''),
       debounceTime(250),
       distinctUntilChanged(),

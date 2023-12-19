@@ -27,3 +27,17 @@
     color: black;
   }
 }
+
+@media only screen and (max-width: 500px) {
+  #form-wrapper>form {
+    width: 300px;
+
+    .form-row {
+      flex-flow: wrap;
+
+      mat-form-field {
+        flex-basis: 100%;
+      }
+    }
+  }
+}

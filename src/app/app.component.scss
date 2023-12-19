@@ -1,3 +1,7 @@
+mat-toolbar {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
 .toolbar-wrapper {
   display: flex;
   flex-flow: row nowrap;
@@ -6,11 +10,30 @@
 
   .right {
     margin-left: auto;
-
   }
 
   .active {
     background-color: #e01933;
     color: white;
   }
+}
+
+.content-container {
+  height: calc(100% - 64px);
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-blend-mode: screen;
+  background-image: url('../assets/images/flight-bg.jpg');
+  background-image: linear-gradient(to bottom, #000, #363636, #4d4d4d), url('../assets/images/flight-bg.jpg');
+}
+
+#dal-logo {
+  height: 35px;
+  width: auto;
+  margin-right: 1em;
+  border-radius: 4px;
 }

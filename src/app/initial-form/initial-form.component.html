@@ -53,9 +53,9 @@
         @if (initialForm.get('tripTypeControl')?.value === 'round-trip') {
         <mat-form-field>
             <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input formGroupName="dateRange" [rangePicker]="rangePicker">
-                <input matStartDate formControlName="start" placeholder="Start date" [min]="minDate">
-                <input matEndDate formControlName="end" placeholder="End date" [min]="minDate">
+            <mat-date-range-input formGroupName="dateRange" [rangePicker]="rangePicker" [min]="minDate">
+                <input matStartDate formControlName="start" placeholder="Start date">
+                <input matEndDate formControlName="end" placeholder="End date">
             </mat-date-range-input>
             <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
             <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>

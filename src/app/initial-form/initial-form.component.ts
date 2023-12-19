@@ -33,7 +33,6 @@ import { MatButtonModule } from '@angular/material/button';
 
 export class InitialFormComponent implements OnInit, OnDestroy {
   subscriptions: Array<Subscription | undefined> = [];
-
   minDate: Date = new Date(Date.now())
 
   initialForm: FormGroup = new FormGroup({

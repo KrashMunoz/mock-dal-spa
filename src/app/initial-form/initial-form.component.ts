@@ -107,12 +107,6 @@ export class InitialFormComponent implements OnInit, OnDestroy {
       deepartureDate?.updateValueAndValidity();
       rangeStart?.updateValueAndValidity();
       rangeEnd?.updateValueAndValidity();
-
-      // console.table({
-      //   oneWay: deepartureDate?.errors,
-      //   roundTripStart: rangeStart?.errors,
-      //   roundTripEnd: rangeEnd?.errors
-      // });
     });
 
     this.subscriptions.push(flightTypeSub);

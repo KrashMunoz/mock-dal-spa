@@ -61,7 +61,6 @@
             <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
             <mat-date-range-picker #rangePicker></mat-date-range-picker>
 
-            <!-- KM TODO: Implement validation messages -->
             @if (initialForm.get('dateRange.start')?.valid === false) {
             <mat-error>Start date required</mat-error>
             }
